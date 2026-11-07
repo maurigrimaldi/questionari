@@ -1,0 +1,320 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' blob: data:; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'; connect-src 'self'; media-src 'self' blob:; worker-src 'self'; manifest-src 'self'; form-action 'none'; base-uri 'none'">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="theme-color" content="#1f3a5f">
+<meta name="apple-mobile-web-app-title" content="Questionari">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" type="image/png" href="icon-192.png">
+<title>Questionari A4</title>
+<style>
+:root{--bg:#eef0f3;--fg:#17212b;--card:#fff;--ac:#1f3a5f;--acf:#fff;--bd:#c9d0d9;color-scheme:light dark}
+@media(prefers-color-scheme:dark){:root{--bg:#10151b;--fg:#e8edf2;--card:#1a222b;--ac:#8fb4e8;--acf:#10151b;--bd:#334050}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.45 system-ui,-apple-system,"Segoe UI",sans-serif;padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom)}
+header{display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:12px 16px;background:var(--card);border-bottom:1px solid var(--bd);position:sticky;top:0;z-index:5}
+h1{font:600 1.05rem Georgia,serif;margin:0 12px 0 0}
+nav{display:flex;gap:6px;flex-wrap:wrap}
+button,select,input,textarea{font:inherit;color:inherit}
+button{border:1px solid var(--bd);background:var(--card);padding:8px 12px;border-radius:8px;cursor:pointer}
+button.on,button.pri{background:var(--ac);color:var(--acf);border-color:var(--ac)}
+input,textarea,select{width:100%;padding:8px;border:1px solid var(--bd);border-radius:8px;background:var(--card)}
+textarea{min-height:70px;resize:vertical}
+main{max-width:900px;margin:0 auto;padding:16px}
+.view{display:none}.view.on{display:block}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:10px;padding:12px;margin-bottom:12px}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:8px 0}
+.row>*{flex:1 1 140px}
+small.h{opacity:.75;display:block;margin-top:4px}
+.fbtn{border:1px solid var(--bd);background:var(--card);padding:8px 12px;border-radius:8px;cursor:pointer;text-align:center}
+#cres{white-space:pre-line;margin:8px 0}
+.rt{width:100%;border-collapse:collapse}.rt td,.rt th{padding:4px 8px;border-bottom:1px solid var(--bd);text-align:left}
+.page{background:#fff;color:#000;width:210mm;min-height:297mm;padding:16mm 16mm 14mm;margin:0 auto 16px;position:relative;box-shadow:0 1px 6px #0003;font:11pt/1.5 Georgia,serif;overflow:hidden}
+.wrap{overflow-x:auto}
+.page h2{font-size:15pt;margin:0 0 4mm}
+.q{margin:0 0 5mm;break-inside:avoid}
+.opt{margin-left:7mm}
+.ln{border-bottom:1px solid #000;height:8mm}
+.dots{display:inline-block;min-width:32mm;border-bottom:1.5px dotted #000;height:1em}
+.page small{font-size:9pt}
+table.col{border-collapse:collapse;width:100%}
+table.col td{padding:1.5mm 2mm;border-bottom:1px solid #000}
+table.col td:first-child{width:38%;font-weight:bold}
+.mk{position:absolute;width:8mm;height:8mm;background:#000}
+.tl{top:5mm;left:5mm}.tr{top:5mm;right:5mm}.bl{bottom:5mm;left:5mm}.br{bottom:5mm;right:5mm}
+.cols{columns:2;column-gap:10mm;margin-top:5mm}
+.it{display:flex;align-items:center;gap:2mm;margin-bottom:2.6mm;break-inside:avoid}
+.it b{width:12mm;font:bold 10pt system-ui}
+.bb{width:6mm;height:6mm;border:1.2px solid #000;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font:7pt system-ui}
+.idg{display:flex;gap:4mm;margin:3mm 0}
+.idg div{display:flex;flex-direction:column;gap:1mm;align-items:center}
+.idg .bb{width:4.6mm;height:4.6mm;font-size:6pt}
+.key td{padding:2px 8px;border-bottom:1px solid #999}
+@page{size:A4;margin:0}
+@media print{body{background:#fff}header,.ui{display:none!important}main{padding:0;max-width:none}.page{margin:0;box-shadow:none;page-break-after:always}.wrap{overflow:visible}}
+[hidden]{display:none!important}
+.lk{position:fixed;inset:0;background:var(--bg);z-index:99;display:flex;align-items:center;justify-content:center;padding:20px}
+.cols.c3{columns:3;column-gap:6mm}.cols.c4{columns:4;column-gap:4mm}.cols.c4 .it b{width:7mm}.cols.dn .it{margin-bottom:1.4mm;gap:1.4mm}.cols.dn .bb{width:5mm;height:5mm}.cols.dn .it b{width:9mm}
+.key button{padding:3px 9px;margin:1px}
+video{max-height:50vh;object-fit:contain;background:#000}
+</style>
+</head>
+<body>
+<header class="ui">
+<h1>Questionari A4</h1>
+<nav id="nav"></nav>
+<button class="pri" onclick="window.print()" style="margin-left:auto">Stampa</button>
+</header>
+<main>
+<section class="view ui" id="v-crea">
+<div class="card"><b>Tipo di foglio</b>
+<label><input type="checkbox" id="stdon" style="width:auto"> Foglio standard con sole risposte (stile ZipGrade): scegli numero di domande e chiave a tocco nella scheda Chiave</label>
+<div class="row"><label>Numero di domande (da 1 a 100)<input id="stdn" type="number" min="1" max="100" step="1" inputmode="numeric"></label><label>Scelte per domanda<select id="stdk"></select></label></div></div>
+<div class="card">
+<label>Titolo del questionario<input id="title"></label>
+<div class="row"><label>Materia / classe<input id="meta"></label></div>
+</div>
+<div class="card">
+<b>Genera con IA</b>
+<label>Testo di partenza (da OCR, appunti o libro)<textarea id="src" placeholder="Incolla qui il testo da cui creare le domande"></textarea></label>
+<small class="h">Per la privacy l’app non si collega a nessun server. Copia la richiesta, usala con l’IA che preferisci e incolla il risultato sotto. Non inserire mai nomi o dati personali degli studenti nel testo.</small>
+<div class="row"><button class="pri" id="bcopy">Copia richiesta per IA</button></div>
+<label>Incolla il JSON ottenuto<textarea id="imp"></textarea></label>
+<div class="row"><button id="bimp">Importa domande</button></div>
+<div id="msg" role="status"></div>
+</div>
+<div id="list"></div>
+<div class="row ui"><select id="newt"></select><button class="pri" id="badd">Aggiungi domanda</button></div>
+</section>
+<section class="view" id="v-dom"><div class="wrap" id="p-dom"></div></section>
+<section class="view" id="v-ris"><div class="wrap" id="p-ris"></div></section>
+<section class="view ui" id="v-key"><div class="card" id="p-key"></div></section>
+<section class="view ui" id="v-cor">
+<div class="card"><b>Correggi con la fotocamera</b>
+<small class="h">Fotografa il foglio risposte intero, dall’alto, con luce uniforme e i quattro quadrati neri ben visibili. Usa il questionario che hai stampato, ancora aperto in questa app.</small>
+<div class="row"><label class="fbtn">Scatta foto<input type="file" accept="image/*" capture="environment" id="fcam" hidden></label><label class="fbtn">Scegli dalla libreria<input type="file" accept="image/*" id="flib" hidden></label></div>
+<video id="vid" playsinline muted style="display:none;width:100%;border-radius:8px"></video>
+<div class="row"><button class="pri" id="blive">Scansione continua</button><button id="bstop" hidden>Ferma fotocamera</button></div>
+<small class="h">In scansione continua il foglio viene letto e salvato da solo, appena è fermo e leggibile.</small>
+<div id="cres" role="status"></div>
+<canvas id="scv" style="max-width:100%;display:none"></canvas>
+<div class="row"><button id="bsave" class="pri" disabled>Salva risultato</button></div></div>
+<div class="card"><b>Risultati salvati su questo dispositivo</b><div id="rtab"></div>
+<label><input type="checkbox" id="csvn" style="width:auto"> Includi i nomi nel CSV (sconsigliato se il file lascia il dispositivo)</label>
+<div class="row"><button id="bcsv">Copia come CSV</button><button id="bclr">Cancella risultati</button></div></div>
+</section>
+<section class="view ui" id="v-cls">
+<div class="card"><b>Classi e codici studente</b>
+<small class="h">I nomi restano solo su questo dispositivo: servono a mostrare il nome accanto al codice letto dal foglio. Per ridurre i dati puoi usare solo iniziali o numeri di registro.</small>
+<div class="row"><select id="csel"></select><button id="bdcl">Elimina classe</button></div>
+<div class="row"><input id="cnm" placeholder="Nome nuova classe, es. 3A"><button id="badc">Crea classe</button></div>
+<label>Aggiungi studenti (uno per riga): il codice a 4 cifre è assegnato in automatico<textarea id="snm"></textarea></label>
+<div class="row"><button class="pri" id="badds">Aggiungi studenti</button></div>
+<div id="stl"></div></div></section>
+<section class="view" id="v-elenco"><div class="wrap" id="p-elenco"></div></section>
+<section class="view ui" id="v-priv"><div class="card">
+<b>Privacy e GDPR (Reg. UE 2016/679)</b>
+<p><b>Cosa fa l’app.</b> Tutto avviene sul tuo dispositivo. Non esiste un server dell’app, non ci sono cookie, statistiche, pubblicità o servizi di terzi, e la pagina blocca da sola ogni connessione verso l’esterno. Le foto dei fogli sono elaborate in memoria e non vengono salvate.</p>
+<p><b>Dati conservati.</b> Solo sul dispositivo: codici anonimi, punteggi, domande e, se li inserisci, i nomi della rubrica di classe. I nomi non sono mai inclusi nei fogli e non vengono mai inviati online (principi di minimizzazione e limitazione, art. 5).</p>
+<p><b>Sicurezza (art. 32).</b> Proteggi il dispositivo con codice di sblocco. In più puoi cifrare tutti i dati con una password (almeno 8 caratteri): se la dimentichi i dati non sono recuperabili.</p>
+<div class="row"><input id="npw" type="password" placeholder="Nuova password" autocomplete="new-password"><button id="benc">Attiva cifratura</button><button id="bdec">Disattiva cifratura</button></div>
+<div id="pmsg" role="status"></div>
+<p><b>Cosa deve fare la scuola.</b> Il titolare è l’istituto: serve l’informativa agli studenti e alle famiglie (art. 13), la base giuridica del trattamento (compito di interesse pubblico, art. 6.1.e), l’inserimento nel registro dei trattamenti (art. 30) e le istruzioni al docente come persona autorizzata. Conserva i risultati solo per il tempo necessario e cancellali poi. Questa app facilita il rispetto del GDPR ma non lo garantisce da sola: dipende da come la usi.</p>
+<div class="row"><button id="bwipe">Cancella tutti i dati dal dispositivo</button></div></div></section>
+</main>
+<div id="lock" class="lk" hidden><div class="card" style="max-width:340px"><b>Dati protetti</b>
+<label>Password<input id="pw" type="password" autocomplete="current-password"></label>
+<div class="row"><button class="pri" id="unl">Sblocca</button></div><div id="lmsg" role="alert"></div></div></div>
+<script>
+const T={mc:"Scelta multipla",open:"Risposta aperta",fill:"Riempimento",complete:"Completamento",column:"Colonna di forme o parole",translate:"Traduzione con alternative"};
+const HINT={mc:"Una opzione per riga; la corretta inizia con *",column:"Una parola per riga: a ciascuna corrisponde una riga da scrivere",translate:"Frase da riempire: Io {*vado|vada} a scuola"};
+const PROMPT="Crea un questionario per studenti di scuola superiore dal testo seguente. Rispondi solo con un array JSON di oggetti {\"t\":tipo,\"q\":testo,\"o\":extra}. Tipi: mc (o = opzioni una per riga, la corretta con * davanti), open, fill e complete (q contiene gli spazi come {risposta} oppure {*giusta|errata}), column (q = consegna, o = parole una per riga), translate (q = frase da tradurre, o = traduzione con spazi {*giusta|alternativa}). Mescola i tipi.\n\nTESTO:\n";
+const $=id=>document.getElementById(id);
+const esc=s=>String(s==null?"":s).replace(/[&<>]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));
+const lines=s=>(s||"").split("\n").map(x=>x.trim()).filter(Boolean);
+const L="ABCDEFGH";
+let S={title:"Verifica di prova",meta:"Classe e data",id:String(Math.floor(100000+Math.random()*900000)),qs:[
+{t:"mc",q:"Quale tempo verbale si usa per un’azione abituale?",o:"*Presente\nPassato remoto\nFuturo anteriore"},
+{t:"fill",q:"Il treno {*parte|parti} alle otto."},
+{t:"translate",q:"Vado a scuola ogni giorno.",o:"I {*go|goes} to school {*every day|each days}."},
+{t:"column",q:"Scrivi la forma richiesta.",o:"sono (infinito)\nfui (infinito)"},
+{t:"open",q:"Spiega con parole tue la differenza tra passato prossimo e imperfetto."}]};
+let KEY=null,SALT=null,LOCKED=false,LC=null;
+const b64=b=>{let t="";new Uint8Array(b).forEach(x=>t+=String.fromCharCode(x));return btoa(t)},ub=t=>Uint8Array.from(atob(t),c=>c.charCodeAt(0));
+async function dkey(pw,salt){const m=await crypto.subtle.importKey("raw",new TextEncoder().encode(pw),"PBKDF2",false,["deriveKey"]);return crypto.subtle.deriveKey({name:"PBKDF2",salt,iterations:250000,hash:"SHA-256"},m,{name:"AES-GCM",length:256},false,["encrypt","decrypt"])}
+try{const r=localStorage.getItem("quest");if(r){const o=JSON.parse(r);if(o.enc)LOCKED=o;else S=o}}catch(e){}
+async function save(){if(LOCKED)return;try{if(KEY){const iv=crypto.getRandomValues(new Uint8Array(12)),c=await crypto.subtle.encrypt({name:"AES-GCM",iv},KEY,new TextEncoder().encode(JSON.stringify(S)));localStorage.setItem("quest",JSON.stringify({enc:1,s:b64(SALT),iv:b64(iv),d:b64(c)}))}else localStorage.setItem("quest",JSON.stringify(S))}catch(e){}}
+function gaps(s){const g=[];String(s||"").replace(/\{([^}]*)\}/g,(m,a)=>{const al=a.split("|").map(x=>x.trim()).filter(Boolean);let c=al.findIndex(x=>x[0]=="*");g.push({al:al.map(x=>x.replace(/^\*/,"")),c});return m});return g}
+function tpl(s){return esc(s).replace(/\{([^}]*)\}/g,(m,a)=>{const al=a.split("|").map(x=>x.replace(/^\*/,"").trim()).filter(Boolean);return '<span class="dots"></span>'+(al.length>1?" <small>("+al.join(" / ")+")</small>":"")})}
+function qHTML(q,i){const n=i+1;let h='<div class="q"><b>'+n+'.</b> ';
+if(q.t=="mc"){h+=esc(q.q);lines(q.o).forEach((o,k)=>h+='<div class="opt">'+L[k]+") "+esc(o.replace(/^\*/,""))+"</div>")}
+else if(q.t=="open"){h+=esc(q.q)+'<div class="ln"></div>'.repeat(4)}
+else if(q.t=="column"){h+=esc(q.q)+'<table class="col">'+lines(q.o).map(w=>"<tr><td>"+esc(w)+"</td><td></td></tr>").join("")+"</table>"}
+else if(q.t=="translate"){h+="Traduci: <i>"+esc(q.q)+"</i><div>"+tpl(q.o)+"</div>"}
+else h+=tpl(q.q);
+return h+"</div>"}
+function items(){const a=[];if(S.std&&S.std.on){for(let i=0;i<S.std.n;i++)a.push({l:""+(i+1),k:S.std.k,c:(S.std.key||[])[i]??-1});return a}S.qs.forEach((q,i)=>{
+if(q.t=="mc"){const o=lines(q.o);a.push({l:""+(i+1),k:o.length,c:o.findIndex(x=>x[0]=="*")})}
+else if(q.t=="fill"||q.t=="complete"||q.t=="translate")gaps(q.t=="translate"?q.o:q.q).forEach((g,j)=>{if(g.al.length>1)a.push({l:(i+1)+"."+(j+1),k:g.al.length,c:g.c})})});return a}
+function rend(){LC=null;
+$("p-dom").innerHTML='<div class="page"><h2>'+esc(S.title)+'</h2><div style="margin-bottom:6mm">'+esc(S.meta)+'  ·  Codice compito '+S.id+'</div>'+S.qs.map(qHTML).join("")+"</div>";
+const it=items();
+let id='<div class="idg">'+[0,1,2,3].map(c=>"<div>"+[0,1,2,3,4,5,6,7,8,9].map(d=>'<span class="bb" data-c="'+c+'" data-d="'+d+'">'+d+"</span>").join("")+"</div>").join("")+"</div>";
+$("p-ris").innerHTML='<div class="page"><i class="mk tl"></i><i class="mk tr"></i><i class="mk bl"></i><i class="mk br"></i><h2>Foglio risposte</h2><div>Compito '+S.id+'. Annerisci le caselle con penna nera. Le risposte aperte si scrivono sul foglio domande.</div><div style="margin-top:4mm"><b>Codice studente (4 cifre, fornito dal docente)</b></div>'+id+'<div class="cols'+(it.length>60?" c4":it.length>40?" c3":"")+(it.length>20?" dn":"")+'">'+it.map(x=>'<div class="it"><b>'+x.l+"</b>"+Array.from({length:x.k},(_,k)=>'<span class="bb" data-l="'+x.l+'" data-k="'+k+'">'+L[k]+"</span>").join("")+"</div>").join("")+"</div></div>";
+keyV();
+}
+function list(){$("list").innerHTML=S.qs.map((q,i)=>'<div class="card" data-i="'+i+'"><div class="row"><select data-f="t">'+Object.keys(T).map(k=>'<option value="'+k+'"'+(k==q.t?" selected":"")+">"+T[k]+"</option>").join("")+'</select><button data-del="'+i+'">Elimina</button></div><label>Domanda '+(i+1)+'<textarea data-f="q">'+esc(q.q)+"</textarea></label>"+(HINT[q.t]?'<label>'+HINT[q.t]+'<textarea data-f="o">'+esc(q.o||"")+"</textarea></label>":"")+(q.t=="fill"||q.t=="complete"?'<small class="h">Spazi: {risposta} oppure {*giusta|errata}</small>':"")+"</div>").join("")}
+function setV(v){if(v!="cor")liveStop();["crea","dom","ris","key","cor","cls","elenco","priv"].forEach(k=>$("v-"+k).classList.toggle("on",k==v));[...$("nav").children].forEach(b=>b.classList.toggle("on",b.dataset.v==v))}
+[["crea","Crea"],["dom","Foglio domande"],["ris","Foglio risposte"],["key","Chiave"],["cor","Correggi"],["cls","Classi"],["elenco","Elenco codici"],["priv","Privacy"]].forEach(([v,t])=>{const b=document.createElement("button");b.textContent=t;b.dataset.v=v;b.onclick=()=>setV(v);$("nav").appendChild(b)});
+$("newt").innerHTML=Object.keys(T).map(k=>'<option value="'+k+'">'+T[k]+"</option>").join("");
+$("badd").onclick=()=>{S.qs.push({t:$("newt").value,q:"",o:""});save();list();rend()};
+$("list").addEventListener("input",e=>{const c=e.target.closest("[data-i]");if(!c||!e.target.dataset.f)return;S.qs[c.dataset.i][e.target.dataset.f]=e.target.value;save();rend();if(e.target.dataset.f=="t")list()});
+$("list").addEventListener("click",e=>{const d=e.target.dataset.del;if(d==null)return;S.qs.splice(+d,1);save();list();rend()});
+$("title").value=S.title;$("meta").value=S.meta;
+$("title").oninput=e=>{S.title=e.target.value;save();rend()};
+$("meta").oninput=e=>{S.meta=e.target.value;save();rend()};
+function say(t){$("msg").textContent=t}
+const QK=["question_text","question","q","text","domanda","testo","prompt","enunciato"];
+const pick=(o,ks)=>{for(const k of ks)if(o[k]!=null&&o[k]!=="")return o[k]};
+const isQ=o=>o&&typeof o=="object"&&!Array.isArray(o)&&typeof pick(o,QK)=="string";
+function clean(t){let r="",inS=false,esc=false;for(let i=0;i<t.length;i++){const c=t[i];
+if(inS){if(esc){esc=false;r+=c}else if(c=="\\"){esc=true;r+=c}else if(c=='"'){inS=false;r+=c}else if(c=="\n"||c=="\r"||c=="\t")r+=" ";else r+=c;continue}
+if(c=='"'){inS=true;r+=c;continue}
+if(c==","){let j=i+1;while(j<t.length&&/\s/.test(t[j]))j++;if(t[j]=="}"||t[j]=="]")continue}
+r+=c}return r}
+function salvage(t){const out=[],st=[];let inS=false,esc=false;for(let i=0;i<t.length;i++){const c=t[i];
+if(inS){if(esc)esc=false;else if(c=="\\")esc=true;else if(c=='"')inS=false;continue}
+if(c=='"'){inS=true;continue}
+if(c=="{")st.push(i);else if(c=="}"&&st.length){const a=st.pop();try{const o=JSON.parse(t.slice(a,i+1));if(isQ(o))out.push(o)}catch(e){}}}return out}
+function walk(x,out){if(Array.isArray(x))x.forEach(y=>walk(y,out));else if(isQ(x))out.push(x);else if(x&&typeof x=="object")Object.values(x).forEach(y=>walk(y,out))}
+function parseQ(raw){let t=clean(String(raw).replace(/```[a-z]*/gi,"").trim());const a=t.search(/[\[{]/);if(a<0)return{list:[],partial:false};t=t.slice(a);
+try{const out=[];walk(JSON.parse(t),out);if(out.length)return{list:out,partial:false}}catch(e){}
+const b=Math.max(t.lastIndexOf("]"),t.lastIndexOf("}"));
+try{const out=[];walk(JSON.parse(t.slice(0,b+1)),out);if(out.length)return{list:out,partial:false}}catch(e){}
+return{list:salvage(t),partial:true}}
+function ty(v,h){const s=String(v||"").toLowerCase();if(T[s])return s;
+if(/trad|transl/.test(s))return"translate";if(/colonn|column|forme/.test(s))return"column";if(/complet/.test(s))return"complete";if(/fill|riempi|gap|cloze|vuot/.test(s))return"fill";if(/apert|open|short|essay|libera/.test(s))return"open";if(/multipl|scelta|choice|mc|quiz/.test(s))return"mc";return h?"mc":"open"}
+function norm(o){let q=String(pick(o,QK)).trim();let op=pick(o,["options","choices","opzioni","risposte","answers","o"]);let keys=[],vals=[];
+if(Array.isArray(op)){vals=op.map(x=>typeof x=="object"&&x?String(pick(x,["text","testo","label"])||""):String(x))}
+else if(op&&typeof op=="object"){keys=Object.keys(op);vals=keys.map(k=>String(op[k]))}
+else if(typeof op=="string")vals=lines(op);
+const t=ty(pick(o,["t","type","tipo","question_type"]),vals.length>1);
+let c=pick(o,["correct_answer","correct","risposta_corretta","corretta","answer","soluzione","solution"]);
+if(t=="mc"){let ci=-1;if(c!=null){if(typeof c=="number")ci=c;else{const cs=String(c).trim();ci=keys.findIndex(k=>k.toLowerCase()==cs.toLowerCase());if(ci<0&&/^[A-Ha-h]$/.test(cs))ci=L.indexOf(cs.toUpperCase());if(ci<0)ci=vals.findIndex(v=>v.trim().toLowerCase()==cs.toLowerCase())}}
+return{t,q,o:vals.map((v,i)=>(i===ci?"*":"")+v.replace(/^\*/,"")).join("\n")}}
+if(t=="fill"||t=="complete"){q=q.replace(/_{3,}|\.{4,}|…+/g,"{}");if(typeof c=="string"&&q.includes("{}"))q=q.replace("{}","{"+c+"}");return{t,q,o:""}}
+return{t,q,o:vals.join("\n")}}
+function take(raw){const r=parseQ(raw);if(!r.list.length)throw new Error("vuoto");S.qs=S.qs.concat(r.list.map(norm));save();list();rend();say("Domande importate: "+r.list.length+"."+(r.partial?" Il testo era incompleto o con errori: controlla l’ultima domanda e importa di nuovo la parte mancante.":""))}
+$("bimp").onclick=()=>{try{take($("imp").value)}catch(e){say("Non ho trovato domande nel testo incollato. Incolla il JSON generato dall’IA, anche se è lungo.")}};
+$("bcopy").onclick=async()=>{try{await navigator.clipboard.writeText(PROMPT+$("src").value);say("Richiesta copiata.")}catch(e){say("Copia non riuscita: seleziona il testo a mano.")}};
+
+function solveH(s,t){const A=[];for(let i=0;i<4;i++){const[x,y]=s[i],[u,v]=t[i];A.push([x,y,1,0,0,0,-u*x,-u*y,u]);A.push([0,0,0,x,y,1,-v*x,-v*y,v])}
+for(let i=0;i<8;i++){let p=i;for(let r=i+1;r<8;r++)if(Math.abs(A[r][i])>Math.abs(A[p][i]))p=r;[A[i],A[p]]=[A[p],A[i]];for(let r=0;r<8;r++){if(r==i)continue;const f=A[r][i]/A[i][i];for(let c=i;c<9;c++)A[r][c]-=f*A[i][c]}}
+return A.map((r,i)=>r[8]/r[i])}
+function ap(h,x,y){const w=h[6]*x+h[7]*y+1;return[(h[0]*x+h[1]*y+h[2])/w,(h[3]*x+h[4]*y+h[5])/w]}
+function layout(){const v=$("v-ris"),o=v.style.cssText;v.style.cssText="display:block;position:absolute;visibility:hidden;left:0;top:0";
+const pg=$("p-ris").firstChild,pr=pg.getBoundingClientRect(),k=210/pr.width;
+const c=e=>{const r=e.getBoundingClientRect();return[(r.left+r.width/2-pr.left)*k,(r.top+r.height/2-pr.top)*k]};
+const q=s=>c(pg.querySelector(s));
+const res={mk:[q(".mk.tl"),q(".mk.tr"),q(".mk.br"),q(".mk.bl")],it:[...pg.querySelectorAll("[data-l]")].map(e=>({l:e.dataset.l,k:+e.dataset.k,p:c(e)})),id:[...pg.querySelectorAll("[data-c]")].map(e=>({c:+e.dataset.c,d:+e.dataset.d,p:c(e)}))};
+v.style.cssText=o;return res}
+let last=null,live=null,prev="",done="";
+const cls=()=>(S.cls||[])[S.cur||0],nm=c=>{const k=cls(),t=k&&k.st.find(x=>x.c==c);return t?t.n:""};
+function keyV(){const it=items(),sd=S.std&&S.std.on;let h="<b>Chiave di correzione</b>"+(sd?"<small class='h'>Tocca la lettera giusta per ogni domanda.</small>":"")+"<table class='key'>";
+it.forEach((x,i)=>{h+="<tr><td>"+x.l+"</td><td>"+(sd?Array.from({length:x.k},(_,k)=>'<button data-ki="'+i+'" data-kk="'+k+'" class="'+(x.c===k?"on":"")+'">'+L[k]+"</button>").join(" "):(x.c>=0?L[x.c]:"non indicata"))+"</td></tr>"});$("p-key").innerHTML=h+"</table>"}
+$("p-key").onclick=e=>{const i=e.target.dataset.ki;if(i==null)return;S.std.key=S.std.key||[];S.std.key[i]=+e.target.dataset.kk;save();rend()};
+function stdUI(){const t=S.std||{on:false,n:20,k:5};$("stdon").checked=t.on;$("stdn").value=t.n;$("stdk").value=t.k}
+$("stdk").innerHTML=[2,3,4,5].map(n=>"<option>"+n+"</option>").join("");
+const nn=()=>Math.min(100,Math.max(1,parseInt($("stdn").value)||1)),stdSet=()=>{S.std={on:$("stdon").checked,n:nn(),k:+$("stdk").value,key:(S.std&&S.std.key)||[]};save();rend()};
+["stdon","stdk"].forEach(i=>$(i).onchange=stdSet);$("stdn").oninput=stdSet;$("stdn").onchange=()=>{$("stdn").value=nn();stdSet()};
+function solveH(s,t){const A=[];for(let i=0;i<4;i++){const[x,y]=s[i],[u,v]=t[i];A.push([x,y,1,0,0,0,-u*x,-u*y,u]);A.push([0,0,0,x,y,1,-v*x,-v*y,v])}
+for(let i=0;i<8;i++){let p=i;for(let r=i+1;r<8;r++)if(Math.abs(A[r][i])>Math.abs(A[p][i]))p=r;[A[i],A[p]]=[A[p],A[i]];for(let r=0;r<8;r++){if(r==i)continue;const f=A[r][i]/A[i][i];for(let c=i;c<9;c++)A[r][c]-=f*A[i][c]}}
+return A.map((r,i)=>r[8]/r[i])}
+function ap(h,x,y){const w=h[6]*x+h[7]*y+1;return[(h[0]*x+h[1]*y+h[2])/w,(h[3]*x+h[4]*y+h[5])/w]}
+function layout(){const v=$("v-ris"),o=v.style.cssText;v.style.cssText="display:block;position:absolute;visibility:hidden;left:0;top:0";
+const pg=$("p-ris").firstChild,pr=pg.getBoundingClientRect(),k=210/pr.width;
+const c=e=>{const r=e.getBoundingClientRect();return[(r.left+r.width/2-pr.left)*k,(r.top+r.height/2-pr.top)*k]};
+const q=t=>c(pg.querySelector(t));
+const res={mk:[q(".mk.tl"),q(".mk.tr"),q(".mk.br"),q(".mk.bl")],it:[...pg.querySelectorAll("[data-l]")].map(e=>({l:e.dataset.l,k:+e.dataset.k,p:c(e)})),id:[...pg.querySelectorAll("[data-c]")].map(e=>({c:+e.dataset.c,d:+e.dataset.d,p:c(e)}))};
+v.style.cssText=o;return res}
+function analyze(src,sw,sh,md){
+const sc=Math.min(1,md/Math.max(sw,sh)),W=Math.round(sw*sc),H=Math.round(sh*sc),M=Math.max(W,H);
+const cv=$("scv");cv.width=W;cv.height=H;const cx=cv.getContext("2d",{willReadFrequently:true});cx.drawImage(src,0,0,W,H);
+const d=cx.getImageData(0,0,W,H).data,g=new Uint8Array(W*H);
+for(let i=0;i<W*H;i++)g[i]=d[4*i]*.3+d[4*i+1]*.59+d[4*i+2]*.11;
+const w1=W+1,ii=new Float64Array(w1*(H+1));
+for(let y=0;y<H;y++){let rs=0;for(let x=0;x<W;x++){rs+=g[y*W+x];ii[(y+1)*w1+x+1]=ii[y*w1+x+1]+rs}}
+const R=Math.round(M/8),bin=new Uint8Array(W*H);
+for(let y=0;y<H;y++){const y0=Math.max(0,y-R),y1=Math.min(H,y+R+1);for(let x=0;x<W;x++){const x0=Math.max(0,x-R),x1=Math.min(W,x+R+1);const m=(ii[y1*w1+x1]-ii[y0*w1+x1]-ii[y1*w1+x0]+ii[y0*w1+x0])/((x1-x0)*(y1-y0));bin[y*W+x]=g[y*W+x]<m*.8?1:0}}
+const vis=new Uint8Array(W*H),cands=[],st=[];
+for(let i=0;i<W*H;i++){if(!bin[i]||vis[i])continue;let x0=W,x1=0,y0=H,y1=0,a=0;st.push(i);vis[i]=1;
+while(st.length){const p=st.pop(),x=p%W,y=(p/W)|0;a++;if(x<x0)x0=x;if(x>x1)x1=x;if(y<y0)y0=y;if(y>y1)y1=y;
+if(x>0&&bin[p-1]&&!vis[p-1]){vis[p-1]=1;st.push(p-1)}if(x<W-1&&bin[p+1]&&!vis[p+1]){vis[p+1]=1;st.push(p+1)}
+if(y>0&&bin[p-W]&&!vis[p-W]){vis[p-W]=1;st.push(p-W)}if(y<H-1&&bin[p+W]&&!vis[p+W]){vis[p+W]=1;st.push(p+W)}}
+const w=x1-x0+1,h=y1-y0+1;if(w>=10&&h>=10&&w<=M*.15&&h<=M*.15&&w/h>.75&&w/h<1.33&&a/(w*h)>.85)cands.push({x:(x0+x1)/2,y:(y0+y1)/2,a})}
+const top=cands.sort((p,q)=>q.a-p.a).slice(0,6),by=f=>top.slice().sort((p,q)=>f(p)-f(q));
+const tl=by(p=>p.x+p.y)[0],br=by(p=>-(p.x+p.y))[0],tr=by(p=>-(p.x-p.y))[0],bl=by(p=>p.x-p.y)[0];
+if(top.length<4||new Set([tl,tr,br,bl]).size<4)return{err:"Non trovo i quattro quadrati neri. Inquadra tutto il foglio, dall’alto e con luce uniforme."};
+const pm=[tl,tr,br,bl].map(p=>[p.x,p.y]),Lt=LC||(LC=layout()),Hs=solveH(Lt.mk,pm);
+const s=Math.hypot(pm[1][0]-pm[0][0],pm[1][1]-pm[0][1])/Math.hypot(Lt.mk[1][0]-Lt.mk[0][0],Lt.mk[1][1]-Lt.mk[0][1]),r=1.7*s;
+const fillAt=(px,py)=>{let n=0,k=0;const Q=Math.ceil(r);for(let dy=-Q;dy<=Q;dy++)for(let dx=-Q;dx<=Q;dx++){if(dx*dx+dy*dy>r*r)continue;const x=Math.round(px+dx),y=Math.round(py+dy);if(x<0||y<0||x>=W||y>=H)continue;n++;k+=bin[y*W+x]}return n?k/n:0};
+const f=b=>{const[x,y]=ap(Hs,b.p[0],b.p[1]);b.x=x;b.y=y;b.f=fillAt(x,y)};
+Lt.it.forEach(f);Lt.id.forEach(f);
+const grp={};Lt.it.forEach(b=>(grp[b.l]=grp[b.l]||[]).push(b));
+let ok=0,max=0;const dub=[],ans=[];
+items().forEach(it=>{const bs=grp[it.l]||[],m=bs.filter(b=>b.f>.5);if(it.c>=0)max++;
+if(m.length==1){if(bs.indexOf(m[0])===it.c)ok++}else dub.push(it.l+(m.length?" (più risposte)":" (vuota)"));
+ans.push(m.length==1?bs.indexOf(m[0]):(m.length?-2:-1));
+bs.forEach((b,i)=>{b.m=b.f>.5;b.good=i===it.c})});
+const code=[0,1,2,3].map(c=>{const bs=Lt.id.filter(b=>b.c==c).sort((a,b)=>b.f-a.f);return bs[0].f>.5&&bs[1].f<.5?bs[0].d:"?"}).join("");
+cx.lineWidth=Math.max(2,s*.5);
+Lt.it.forEach(b=>{if(b.m||b.good){cx.strokeStyle=b.m?(b.good?"#16a34a":"#dc2626"):"#f59e0b";cx.beginPath();cx.arc(b.x,b.y,r*1.7,0,7);cx.stroke()}});
+Lt.id.forEach(b=>{if(b.f>.5){cx.strokeStyle="#2563eb";cx.beginPath();cx.arc(b.x,b.y,r*1.7,0,7);cx.stroke()}});
+return{code,ok,max,dub,a:ans}}
+function show(r,man){const o=$("cres");if(r.err){o.textContent=r.err;return false}
+last={code:r.code,ok:r.ok,max:r.max,a:r.a,date:new Date().toISOString().slice(0,10)};const n=nm(r.code);
+o.textContent=(n?n+" · ":"")+"Codice "+r.code+"  ·  Punteggio: "+r.ok+"/"+r.max+(r.code.includes("?")?"\nCodice non leggibile del tutto: controllalo.":"")+(r.dub.length?"\nDa controllare: "+r.dub.join(", "):"")+"\nVerde: giusta. Rosso: sbagliata. Arancione: giusta non segnata.";
+if(man)$("bsave").disabled=r.code.includes("?");return true}
+async function scan(file){liveStop();const o=$("cres");o.textContent="Lettura in corso…";$("bsave").disabled=true;last=null;
+try{const img=new Image();img.src=URL.createObjectURL(file);await img.decode();const r=analyze(img,img.naturalWidth,img.naturalHeight,1400);URL.revokeObjectURL(img.src);if(!r.err)$("scv").style.display="block";show(r,true)}
+catch(e){o.textContent="Lettura non riuscita. Riprova con più luce e il foglio intero nell’inquadratura."}}
+async function liveStart(){try{live=await navigator.mediaDevices.getUserMedia({video:{facingMode:"environment",width:{ideal:1920}},audio:false});const v=$("vid");v.srcObject=live;await v.play();v.style.display="block";$("scv").style.display="none";$("blive").hidden=true;$("bstop").hidden=false;$("cres").textContent="Cerco il foglio risposte…";prev="";done="";tick()}
+catch(e){live=null;$("cres").textContent="Fotocamera non disponibile o permesso negato."}}
+function liveStop(){if(live){live.getTracks().forEach(t=>t.stop());live=null}$("vid").style.display="none";$("blive").hidden=false;$("bstop").hidden=true}
+function tick(){if(!live)return;const v=$("vid");let wait=350;
+try{if(v.videoWidth){const r=analyze(v,v.videoWidth,v.videoHeight,1000);
+if(r.err){prev="";done=""}else if(!r.code.includes("?")&&r.code!==done){const k=r.code+"|"+r.a.join(",");if(k===prev){done=r.code;prev="";show(r);saveRes(last);$("scv").style.display="block";wait=2500;if(navigator.vibrate)navigator.vibrate(60)}else prev=k}}}catch(e){}
+setTimeout(()=>{if(live){$("scv").style.display="none";tick()}},wait)}
+function saveRes(x){S.res=(S.res||[]).filter(y=>y.code!==x.code).concat(x);save();tab()}
+function tab(){const r=S.res||[];$("rtab").innerHTML=r.length?'<table class="rt"><tr><th>Codice</th><th>Nome</th><th>Punti</th><th>Data</th><th></th></tr>'+r.map((x,i)=>"<tr><td>"+esc(x.code)+"</td><td>"+esc(nm(x.code))+"</td><td>"+x.ok+"/"+x.max+"</td><td>"+x.date+'</td><td><button data-rd="'+i+'">×</button></td></tr>').join("")+"</table><small class='h'>% corrette per domanda: "+items().map((x,i)=>x.c>=0?x.l+": "+Math.round(100*r.filter(y=>y.a&&y.a[i]===x.c).length/r.length)+"%":"").filter(Boolean).join(" · ")+"</small>":"<small class='h'>Nessun risultato salvato.</small>"}
+$("rtab").onclick=e=>{const d=e.target.dataset.rd;if(d==null)return;S.res.splice(+d,1);save();tab()};
+["fcam","flib"].forEach(i=>$(i).onchange=e=>{const fl=e.target.files[0];if(fl)scan(fl);e.target.value=""});
+$("bsave").onclick=()=>{if(!last)return;saveRes(last);$("bsave").disabled=true;last=null};
+$("blive").onclick=liveStart;$("bstop").onclick=liveStop;
+$("bclr").onclick=()=>{if(confirm("Cancellare tutti i risultati?")){S.res=[];save();tab()}};
+const cs=v=>/^[=+\-@]/.test(String(v))?"'"+v:v;
+$("bcsv").onclick=async()=>{const n=$("csvn").checked,t="codice;"+(n?"nome;":"")+"punti;massimo;data\n"+(S.res||[]).map(x=>[x.code].concat(n?[cs(nm(x.code))]:[],[x.ok,x.max,x.date]).join(";")).join("\n");try{await navigator.clipboard.writeText(t);$("cres").textContent="CSV copiato."}catch(e){$("cres").textContent="Copia non riuscita."}};
+function clsUI(){const a=S.cls||[],k=cls();$("csel").innerHTML=a.map((c,i)=>'<option value="'+i+'"'+(i==(S.cur||0)?" selected":"")+">"+esc(c.n)+"</option>").join("");
+$("stl").innerHTML=k?'<table class="rt">'+k.st.map((t,i)=>"<tr><td>"+t.c+"</td><td>"+esc(t.n)+'</td><td><button data-sd="'+i+'">×</button></td></tr>').join("")+"</table>":"<small class='h'>Crea una classe per associare i nomi ai codici, solo su questo dispositivo.</small>";
+$("p-elenco").innerHTML=k?'<div class="page"><h2>Elenco codici – '+esc(k.n)+'</h2><div style="margin-bottom:5mm"><b>Riservato al docente: contiene dati personali. Non diffondere, non fotografare, conservare al sicuro e distruggere a fine uso.</b></div><table class="col">'+k.st.map(t=>"<tr><td>"+t.c+"</td><td>"+esc(t.n)+"</td></tr>").join("")+"</table></div>":"";tab()}
+$("badc").onclick=()=>{const n=$("cnm").value.trim();if(!n)return;(S.cls=S.cls||[]).push({n,st:[]});S.cur=S.cls.length-1;$("cnm").value="";save();clsUI()};
+$("badds").onclick=()=>{const k=cls();if(!k)return;let n=Math.max(0,...k.st.map(t=>+t.c));lines($("snm").value).forEach(x=>{if(n<9999){n++;k.st.push({c:String(n).padStart(4,"0"),n:x})}});$("snm").value="";save();clsUI()};
+$("csel").onchange=e=>{S.cur=+e.target.value;save();clsUI()};
+$("stl").onclick=e=>{const d=e.target.dataset.sd;if(d==null)return;cls().st.splice(+d,1);save();clsUI()};
+$("bdcl").onclick=()=>{if(cls()&&confirm("Eliminare la classe e i nomi?")){S.cls.splice(S.cur||0,1);S.cur=0;save();clsUI()}};
+$("benc").onclick=async()=>{const p=$("npw").value;if(p.length<8){$("pmsg").textContent="Servono almeno 8 caratteri.";return}SALT=crypto.getRandomValues(new Uint8Array(16));KEY=await dkey(p,SALT);await save();$("npw").value="";$("pmsg").textContent="Cifratura attiva. Non perdere la password."};
+$("bdec").onclick=async()=>{KEY=null;await save();$("pmsg").textContent="Cifratura disattivata."};
+$("bwipe").onclick=()=>{if(confirm("Eliminare definitivamente tutti i dati di questa app dal dispositivo?")){try{localStorage.removeItem("quest")}catch(e){}location.reload()}};
+$("unl").onclick=async()=>{try{const o=LOCKED,salt=ub(o.s),k=await dkey($("pw").value,salt),pl=await crypto.subtle.decrypt({name:"AES-GCM",iv:ub(o.iv)},k,ub(o.d));S=JSON.parse(new TextDecoder().decode(pl));KEY=k;SALT=salt;LOCKED=false;$("lock").hidden=true;$("pw").value="";refresh()}catch(e){$("lmsg").textContent="Password errata."}};
+function refresh(){$("title").value=S.title;$("meta").value=S.meta;stdUI();list();rend();clsUI()}
+setV("crea");refresh();if(LOCKED)$("lock").hidden=false;
+if("serviceWorker" in navigator)window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}));
+</script>
+</body>
+</html>
