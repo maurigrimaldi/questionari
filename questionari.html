@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#1f3a5f">
+<title>Questionari A4</title>
+<style>
+:root{--bg:#eef0f3;--fg:#17212b;--card:#fff;--ac:#1f3a5f;--acf:#fff;--bd:#c9d0d9;color-scheme:light dark}
+@media(prefers-color-scheme:dark){:root{--bg:#10151b;--fg:#e8edf2;--card:#1a222b;--ac:#8fb4e8;--acf:#10151b;--bd:#334050}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.45 system-ui,-apple-system,"Segoe UI",sans-serif;padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom)}
+header{display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:12px 16px;background:var(--card);border-bottom:1px solid var(--bd);position:sticky;top:0;z-index:5}
+h1{font:600 1.05rem Georgia,serif;margin:0 12px 0 0}
+nav{display:flex;gap:6px;flex-wrap:wrap}
+button,select,input,textarea{font:inherit;color:inherit}
+button{border:1px solid var(--bd);background:var(--card);padding:8px 12px;border-radius:8px;cursor:pointer}
+button.on,button.pri{background:var(--ac);color:var(--acf);border-color:var(--ac)}
+input,textarea,select{width:100%;padding:8px;border:1px solid var(--bd);border-radius:8px;background:var(--card)}
+textarea{min-height:70px;resize:vertical}
+main{max-width:900px;margin:0 auto;padding:16px}
+.view{display:none}.view.on{display:block}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:10px;padding:12px;margin-bottom:12px}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:8px 0}
+.row>*{flex:1 1 140px}
+small.h{opacity:.75;display:block;margin-top:4px}
+.fbtn{border:1px solid var(--bd);background:var(--card);padding:8px 12px;border-radius:8px;cursor:pointer;text-align:center}
+#cres{white-space:pre-line;margin:8px 0}
+.rt{width:100%;border-collapse:collapse}.rt td,.rt th{padding:4px 8px;border-bottom:1px solid var(--bd);text-align:left}
+.page{background:#fff;color:#000;width:210mm;min-height:297mm;padding:16mm 16mm 14mm;margin:0 auto 16px;position:relative;box-shadow:0 1px 6px #0003;font:11pt/1.5 Georgia,serif;overflow:hidden}
+.wrap{overflow-x:auto}
+.page h2{font-size:15pt;margin:0 0 4mm}
+.q{margin:0 0 5mm;break-inside:avoid}
+.opt{margin-left:7mm}
+.ln{border-bottom:1px solid #000;height:8mm}
+.dots{display:inline-block;min-width:32mm;border-bottom:1.5px dotted #000;height:1em}
+.page small{font-size:9pt}
+table.col{border-collapse:collapse;width:100%}
+table.col td{padding:1.5mm 2mm;border-bottom:1px solid #000}
+table.col td:first-child{width:38%;font-weight:bold}
+.mk{position:absolute;width:8mm;height:8mm;background:#000}
+.tl{top:5mm;left:5mm}.tr{top:5mm;right:5mm}.bl{bottom:5mm;left:5mm}.br{bottom:5mm;right:5mm}
+.cols{columns:2;column-gap:10mm;margin-top:5mm}
+.it{display:flex;align-items:center;gap:2mm;margin-bottom:2.6mm;break-inside:avoid}
+.it b{width:12mm;font:bold 10pt system-ui}
+.bb{width:6mm;height:6mm;border:1.2px solid #000;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font:7pt system-ui}
+.idg{display:flex;gap:4mm;margin:3mm 0}
+.idg div{display:flex;flex-direction:column;gap:1mm;align-items:center}
+.idg .bb{width:4.6mm;height:4.6mm;font-size:6pt}
+.key td{padding:2px 8px;border-bottom:1px solid #999}
+@page{size:A4;margin:0}
+@media print{body{background:#fff}header,.ui{display:none!important}main{padding:0;max-width:none}.page{margin:0;box-shadow:none;page-break-after:always}.wrap{overflow:visible}}
+</style>
+</head>
+<body>
+<header class="ui">
+<h1>Questionari A4</h1>
+<nav id="nav"></nav>
+<button class="pri" onclick="window.print()" style="margin-left:auto">Stampa</button>
+</header>
+<main>
+<section class="view ui" id="v-crea">
+<div class="card">
+<label>Titolo del questionario<input id="title"></label>
+<div class="row"><label>Materia / classe<input id="meta"></label></div>
+</div>
+<div class="card">
+<b>Genera con IA</b>
+<label>Testo di partenza (da OCR, appunti o libro)<textarea id="src" placeholder="Incolla qui il testo da cui creare le domande"></textarea></label>
+<label>Indirizzo del tuo server IA<input id="ep" placeholder="https://tuo-server.example/genera"></label>
+<small class="h">Il server riceve il testo e risponde con le domande in JSON. Senza server: copia la richiesta, usala con qualsiasi IA e incolla il risultato sotto.</small>
+<div class="row"><button class="pri" id="bgen">Genera domande</button><button id="bcopy">Copia richiesta per IA</button></div>
+<label>Incolla il JSON ottenuto<textarea id="imp"></textarea></label>
+<div class="row"><button id="bimp">Importa domande</button></div>
+<div id="msg" role="status"></div>
+</div>
+<div id="list"></div>
+<div class="row ui"><select id="newt"></select><button class="pri" id="badd">Aggiungi domanda</button></div>
+</section>
+<section class="view" id="v-dom"><div class="wrap" id="p-dom"></div></section>
+<section class="view" id="v-ris"><div class="wrap" id="p-ris"></div></section>
+<section class="view ui" id="v-key"><div class="card" id="p-key"></div></section>
+<section class="view ui" id="v-cor">
+<div class="card"><b>Correggi con la fotocamera</b>
+<small class="h">Fotografa il foglio risposte intero, dall’alto, con luce uniforme e i quattro quadrati neri ben visibili. Usa il questionario che hai stampato, ancora aperto in questa app.</small>
+<div class="row"><label class="fbtn">Scatta foto<input type="file" accept="image/*" capture="environment" id="fcam" hidden></label><label class="fbtn">Scegli dalla libreria<input type="file" accept="image/*" id="flib" hidden></label></div>
+<div id="cres" role="status"></div>
+<canvas id="scv" style="max-width:100%;display:none"></canvas>
+<div class="row"><button id="bsave" class="pri" disabled>Salva risultato</button></div></div>
+<div class="card"><b>Risultati salvati su questo dispositivo</b><div id="rtab"></div>
+<div class="row"><button id="bcsv">Copia come CSV</button><button id="bclr">Cancella risultati</button></div></div>
+</section>
+</main>
+<script>
+const T={mc:"Scelta multipla",open:"Risposta aperta",fill:"Riempimento",complete:"Completamento",column:"Colonna di forme o parole",translate:"Traduzione con alternative"};
+const HINT={mc:"Una opzione per riga; la corretta inizia con *",column:"Una parola per riga: a ciascuna corrisponde una riga da scrivere",translate:"Frase da riempire: Io {*vado|vada} a scuola"};
+const PROMPT="Crea un questionario per studenti di scuola superiore dal testo seguente. Rispondi solo con un array JSON di oggetti {\"t\":tipo,\"q\":testo,\"o\":extra}. Tipi: mc (o = opzioni una per riga, la corretta con * davanti), open, fill e complete (q contiene gli spazi come {risposta} oppure {*giusta|errata}), column (q = consegna, o = parole una per riga), translate (q = frase da tradurre, o = traduzione con spazi {*giusta|alternativa}). Mescola i tipi.\n\nTESTO:\n";
+const $=id=>document.getElementById(id);
+const esc=s=>String(s==null?"":s).replace(/[&<>]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));
+const lines=s=>(s||"").split("\n").map(x=>x.trim()).filter(Boolean);
+const L="ABCDEFGH";
+let S={title:"Verifica di prova",meta:"Classe e data",id:String(Math.floor(100000+Math.random()*900000)),qs:[
+{t:"mc",q:"Quale tempo verbale si usa per un’azione abituale?",o:"*Presente\nPassato remoto\nFuturo anteriore"},
+{t:"fill",q:"Il treno {*parte|parti} alle otto."},
+{t:"translate",q:"Vado a scuola ogni giorno.",o:"I {*go|goes} to school {*every day|each days}."},
+{t:"column",q:"Scrivi la forma richiesta.",o:"sono (infinito)\nfui (infinito)"},
+{t:"open",q:"Spiega con parole tue la differenza tra passato prossimo e imperfetto."}]};
+try{const r=localStorage.getItem("quest");if(r)S=JSON.parse(r)}catch(e){}
+function save(){try{localStorage.setItem("quest",JSON.stringify(S))}catch(e){}}
+function gaps(s){const g=[];String(s||"").replace(/\{([^}]*)\}/g,(m,a)=>{const al=a.split("|").map(x=>x.trim()).filter(Boolean);let c=al.findIndex(x=>x[0]=="*");g.push({al:al.map(x=>x.replace(/^\*/,"")),c});return m});return g}
+function tpl(s){return esc(s).replace(/\{([^}]*)\}/g,(m,a)=>{const al=a.split("|").map(x=>x.replace(/^\*/,"").trim()).filter(Boolean);return '<span class="dots"></span>'+(al.length>1?" <small>("+al.join(" / ")+")</small>":"")})}
+function qHTML(q,i){const n=i+1;let h='<div class="q"><b>'+n+'.</b> ';
+if(q.t=="mc"){h+=esc(q.q);lines(q.o).forEach((o,k)=>h+='<div class="opt">'+L[k]+") "+esc(o.replace(/^\*/,""))+"</div>")}
+else if(q.t=="open"){h+=esc(q.q)+'<div class="ln"></div>'.repeat(4)}
+else if(q.t=="column"){h+=esc(q.q)+'<table class="col">'+lines(q.o).map(w=>"<tr><td>"+esc(w)+"</td><td></td></tr>").join("")+"</table>"}
+else if(q.t=="translate"){h+="Traduci: <i>"+esc(q.q)+"</i><div>"+tpl(q.o)+"</div>"}
+else h+=tpl(q.q);
+return h+"</div>"}
+function items(){const a=[];S.qs.forEach((q,i)=>{
+if(q.t=="mc"){const o=lines(q.o);a.push({l:""+(i+1),k:o.length,c:o.findIndex(x=>x[0]=="*")})}
+else if(q.t=="fill"||q.t=="complete"||q.t=="translate")gaps(q.t=="translate"?q.o:q.q).forEach((g,j)=>{if(g.al.length>1)a.push({l:(i+1)+"."+(j+1),k:g.al.length,c:g.c})})});return a}
+function rend(){
+$("p-dom").innerHTML='<div class="page"><h2>'+esc(S.title)+'</h2><div style="margin-bottom:6mm">'+esc(S.meta)+'  ·  Codice compito '+S.id+'</div>'+S.qs.map(qHTML).join("")+"</div>";
+const it=items();
+let id='<div class="idg">'+[0,1,2,3].map(c=>"<div>"+[0,1,2,3,4,5,6,7,8,9].map(d=>'<span class="bb" data-c="'+c+'" data-d="'+d+'">'+d+"</span>").join("")+"</div>").join("")+"</div>";
+$("p-ris").innerHTML='<div class="page"><i class="mk tl"></i><i class="mk tr"></i><i class="mk bl"></i><i class="mk br"></i><h2>Foglio risposte</h2><div>Compito '+S.id+'. Annerisci le caselle con penna nera. Le risposte aperte si scrivono sul foglio domande.</div><div style="margin-top:4mm"><b>Codice studente (4 cifre, fornito dal docente)</b></div>'+id+'<div class="cols">'+it.map(x=>'<div class="it"><b>'+x.l+"</b>"+Array.from({length:x.k},(_,k)=>'<span class="bb" data-l="'+x.l+'" data-k="'+k+'">'+L[k]+"</span>").join("")+"</div>").join("")+"</div></div>";
+$("p-key").innerHTML="<b>Chiave di correzione</b><table class='key'>"+it.map(x=>"<tr><td>"+x.l+"</td><td>"+(x.c>=0?L[x.c]:"non indicata")+"</td></tr>").join("")+"</table>";
+}
+function list(){$("list").innerHTML=S.qs.map((q,i)=>'<div class="card" data-i="'+i+'"><div class="row"><select data-f="t">'+Object.keys(T).map(k=>'<option value="'+k+'"'+(k==q.t?" selected":"")+">"+T[k]+"</option>").join("")+'</select><button data-del="'+i+'">Elimina</button></div><label>Domanda '+(i+1)+'<textarea data-f="q">'+esc(q.q)+"</textarea></label>"+(HINT[q.t]?'<label>'+HINT[q.t]+'<textarea data-f="o">'+esc(q.o||"")+"</textarea></label>":"")+(q.t=="fill"||q.t=="complete"?'<small class="h">Spazi: {risposta} oppure {*giusta|errata}</small>':"")+"</div>").join("")}
+function setV(v){["crea","dom","ris","key","cor"].forEach(k=>$("v-"+k).classList.toggle("on",k==v));[...$("nav").children].forEach(b=>b.classList.toggle("on",b.dataset.v==v))}
+[["crea","Crea"],["dom","Foglio domande"],["ris","Foglio risposte"],["key","Chiave"],["cor","Correggi"]].forEach(([v,t])=>{const b=document.createElement("button");b.textContent=t;b.dataset.v=v;b.onclick=()=>setV(v);$("nav").appendChild(b)});
+$("newt").innerHTML=Object.keys(T).map(k=>'<option value="'+k+'">'+T[k]+"</option>").join("");
+$("badd").onclick=()=>{S.qs.push({t:$("newt").value,q:"",o:""});save();list();rend()};
+$("list").addEventListener("input",e=>{const c=e.target.closest("[data-i]");if(!c||!e.target.dataset.f)return;S.qs[c.dataset.i][e.target.dataset.f]=e.target.value;save();rend();if(e.target.dataset.f=="t")list()});
+$("list").addEventListener("click",e=>{const d=e.target.dataset.del;if(d==null)return;S.qs.splice(+d,1);save();list();rend()});
+$("title").value=S.title;$("meta").value=S.meta;
+$("title").oninput=e=>{S.title=e.target.value;save();rend()};
+$("meta").oninput=e=>{S.meta=e.target.value;save();rend()};
+function say(t){$("msg").textContent=t}
+function take(raw){const a=JSON.parse(String(raw).replace(/```json|```/g,"").trim());const arr=Array.isArray(a)?a:a.questions;if(!Array.isArray(arr))throw new Error("formato");S.qs=S.qs.concat(arr.filter(x=>T[x.t]&&x.q).map(x=>({t:x.t,q:String(x.q),o:Array.isArray(x.o)?x.o.join("\n"):String(x.o||"")})));save();list();rend();say("Domande aggiunte: "+arr.length+".")}
+$("bimp").onclick=()=>{try{take($("imp").value)}catch(e){say("Il testo incollato non è un JSON valido di domande.")}};
+$("bcopy").onclick=async()=>{try{await navigator.clipboard.writeText(PROMPT+$("src").value);say("Richiesta copiata.")}catch(e){say("Copia non riuscita: seleziona il testo a mano.")}};
+$("bgen").onclick=async()=>{const u=$("ep").value.trim();if(!u||!$("src").value.trim()){say("Inserisci il testo e l’indirizzo del server IA.");return}
+say("Generazione in corso…");try{const r=await fetch(u,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({prompt:PROMPT+$("src").value})});take(await r.text())}catch(e){say("Il server non ha risposto con domande valide.")}};
+
+function solveH(s,t){const A=[];for(let i=0;i<4;i++){const[x,y]=s[i],[u,v]=t[i];A.push([x,y,1,0,0,0,-u*x,-u*y,u]);A.push([0,0,0,x,y,1,-v*x,-v*y,v])}
+for(let i=0;i<8;i++){let p=i;for(let r=i+1;r<8;r++)if(Math.abs(A[r][i])>Math.abs(A[p][i]))p=r;[A[i],A[p]]=[A[p],A[i]];for(let r=0;r<8;r++){if(r==i)continue;const f=A[r][i]/A[i][i];for(let c=i;c<9;c++)A[r][c]-=f*A[i][c]}}
+return A.map((r,i)=>r[8]/r[i])}
+function ap(h,x,y){const w=h[6]*x+h[7]*y+1;return[(h[0]*x+h[1]*y+h[2])/w,(h[3]*x+h[4]*y+h[5])/w]}
+function layout(){const v=$("v-ris"),o=v.style.cssText;v.style.cssText="display:block;position:absolute;visibility:hidden;left:0;top:0";
+const pg=$("p-ris").firstChild,pr=pg.getBoundingClientRect(),k=210/pr.width;
+const c=e=>{const r=e.getBoundingClientRect();return[(r.left+r.width/2-pr.left)*k,(r.top+r.height/2-pr.top)*k]};
+const q=s=>c(pg.querySelector(s));
+const res={mk:[q(".mk.tl"),q(".mk.tr"),q(".mk.br"),q(".mk.bl")],it:[...pg.querySelectorAll("[data-l]")].map(e=>({l:e.dataset.l,k:+e.dataset.k,p:c(e)})),id:[...pg.querySelectorAll("[data-c]")].map(e=>({c:+e.dataset.c,d:+e.dataset.d,p:c(e)}))};
+v.style.cssText=o;return res}
+let last=null;
+async function scan(file){const out=$("cres");out.textContent="Lettura in corso…";$("bsave").disabled=true;last=null;
+try{const img=new Image();img.src=URL.createObjectURL(file);await img.decode();
+const sc=Math.min(1,1400/Math.max(img.naturalWidth,img.naturalHeight)),W=Math.round(img.naturalWidth*sc),H=Math.round(img.naturalHeight*sc),M=Math.max(W,H);
+const cv=$("scv");cv.width=W;cv.height=H;cv.style.display="block";const cx=cv.getContext("2d",{willReadFrequently:true});cx.drawImage(img,0,0,W,H);
+const d=cx.getImageData(0,0,W,H).data,g=new Uint8Array(W*H);
+for(let i=0;i<W*H;i++)g[i]=d[4*i]*.3+d[4*i+1]*.59+d[4*i+2]*.11;
+const w1=W+1,ii=new Float64Array(w1*(H+1));
+for(let y=0;y<H;y++){let rs=0;for(let x=0;x<W;x++){rs+=g[y*W+x];ii[(y+1)*w1+x+1]=ii[y*w1+x+1]+rs}}
+const R=Math.round(M/8),bin=new Uint8Array(W*H);
+for(let y=0;y<H;y++){const y0=Math.max(0,y-R),y1=Math.min(H,y+R+1);for(let x=0;x<W;x++){const x0=Math.max(0,x-R),x1=Math.min(W,x+R+1);const m=(ii[y1*w1+x1]-ii[y0*w1+x1]-ii[y1*w1+x0]+ii[y0*w1+x0])/((x1-x0)*(y1-y0));bin[y*W+x]=g[y*W+x]<m*.8?1:0}}
+const vis=new Uint8Array(W*H),cands=[],st=[];
+for(let i=0;i<W*H;i++){if(!bin[i]||vis[i])continue;let x0=W,x1=0,y0=H,y1=0,a=0;st.push(i);vis[i]=1;
+while(st.length){const p=st.pop(),x=p%W,y=(p/W)|0;a++;if(x<x0)x0=x;if(x>x1)x1=x;if(y<y0)y0=y;if(y>y1)y1=y;
+if(x>0&&bin[p-1]&&!vis[p-1]){vis[p-1]=1;st.push(p-1)}if(x<W-1&&bin[p+1]&&!vis[p+1]){vis[p+1]=1;st.push(p+1)}
+if(y>0&&bin[p-W]&&!vis[p-W]){vis[p-W]=1;st.push(p-W)}if(y<H-1&&bin[p+W]&&!vis[p+W]){vis[p+W]=1;st.push(p+W)}}
+const w=x1-x0+1,h=y1-y0+1;if(w>=10&&h>=10&&w<=M*.15&&h<=M*.15&&w/h>.75&&w/h<1.33&&a/(w*h)>.85)cands.push({x:(x0+x1)/2,y:(y0+y1)/2,a})}
+const top=cands.sort((p,q)=>q.a-p.a).slice(0,6),by=f=>top.slice().sort((p,q)=>f(p)-f(q));
+const tl=by(p=>p.x+p.y)[0],br=by(p=>-(p.x+p.y))[0],tr=by(p=>-(p.x-p.y))[0],bl=by(p=>p.x-p.y)[0];
+if(top.length<4||new Set([tl,tr,br,bl]).size<4){out.textContent="Non trovo i quattro quadrati neri. Inquadra tutto il foglio, dall’alto e con luce uniforme.";return}
+const pm=[tl,tr,br,bl].map(p=>[p.x,p.y]),Lt=layout(),Hs=solveH(Lt.mk,pm);
+const s=Math.hypot(pm[1][0]-pm[0][0],pm[1][1]-pm[0][1])/Math.hypot(Lt.mk[1][0]-Lt.mk[0][0],Lt.mk[1][1]-Lt.mk[0][1]),r=1.7*s;
+const fillAt=(px,py)=>{let n=0,k=0;const Q=Math.ceil(r);for(let dy=-Q;dy<=Q;dy++)for(let dx=-Q;dx<=Q;dx++){if(dx*dx+dy*dy>r*r)continue;const x=Math.round(px+dx),y=Math.round(py+dy);if(x<0||y<0||x>=W||y>=H)continue;n++;k+=bin[y*W+x]}return n?k/n:0};
+const f=b=>{const[x,y]=ap(Hs,b.p[0],b.p[1]);b.x=x;b.y=y;b.f=fillAt(x,y)};
+Lt.it.forEach(f);Lt.id.forEach(f);
+const grp={};Lt.it.forEach(b=>(grp[b.l]=grp[b.l]||[]).push(b));
+let ok=0,max=0;const dub=[];
+items().forEach(it=>{const bs=grp[it.l]||[],m=bs.filter(b=>b.f>.5);if(it.c>=0)max++;
+if(m.length==1){if(bs.indexOf(m[0])===it.c)ok++}else dub.push(it.l+(m.length?" (più risposte)":" (vuota)"));
+bs.forEach((b,i)=>{b.m=b.f>.5;b.good=i===it.c})});
+const code=[0,1,2,3].map(c=>{const bs=Lt.id.filter(b=>b.c==c).sort((a,b)=>b.f-a.f);return bs[0].f>.5&&bs[1].f<.5?bs[0].d:"?"}).join("");
+cx.lineWidth=Math.max(2,s*.5);
+Lt.it.forEach(b=>{if(b.m||b.good){cx.strokeStyle=b.m?(b.good?"#16a34a":"#dc2626"):"#f59e0b";cx.beginPath();cx.arc(b.x,b.y,r*1.7,0,7);cx.stroke()}});
+Lt.id.forEach(b=>{if(b.f>.5){cx.strokeStyle="#2563eb";cx.beginPath();cx.arc(b.x,b.y,r*1.7,0,7);cx.stroke()}});
+last={code,ok,max,date:new Date().toISOString().slice(0,10)};
+out.textContent="Codice studente: "+code+"  ·  Punteggio: "+ok+"/"+max+(code.includes("?")?"\nCodice non leggibile del tutto: controllalo.":"")+(dub.length?"\nDa controllare: "+dub.join(", "):"")+"\nVerde: giusta. Rosso: sbagliata. Arancione: giusta non segnata.";
+$("bsave").disabled=false}
+catch(e){out.textContent="Lettura non riuscita. Riprova con più luce e il foglio intero nell’inquadratura."}}
+function tab(){const r=S.res||[];$("rtab").innerHTML=r.length?'<table class="rt"><tr><th>Codice</th><th>Punti</th><th>Data</th></tr>'+r.map(x=>"<tr><td>"+esc(x.code)+"</td><td>"+x.ok+"/"+x.max+"</td><td>"+x.date+"</td></tr>").join("")+"</table>":"<small class='h'>Nessun risultato salvato.</small>"}
+["fcam","flib"].forEach(i=>$(i).onchange=e=>{const fl=e.target.files[0];if(fl)scan(fl);e.target.value=""});
+$("bsave").onclick=()=>{if(!last)return;S.res=(S.res||[]).concat(last);save();tab();$("bsave").disabled=true;last=null};
+$("bclr").onclick=()=>{S.res=[];save();tab()};
+$("bcsv").onclick=async()=>{const t="codice;punti;massimo;data\n"+(S.res||[]).map(x=>[x.code,x.ok,x.max,x.date].join(";")).join("\n");try{await navigator.clipboard.writeText(t);$("cres").textContent="CSV copiato."}catch(e){$("cres").textContent="Copia non riuscita."}};
+tab();
+setV("crea");list();rend();
+</script>
+</body>
+</html>
