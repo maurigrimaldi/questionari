@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="it"><head><meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; base-uri 'none'; form-action 'none'">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ricevi questionario</title>
+<style>
+:root{color-scheme:light dark}
+body{margin:0;font:17px/1.5 system-ui,-apple-system,sans-serif;background:#eef0f3;color:#17212b;padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom)}
+@media(prefers-color-scheme:dark){body{background:#10151b;color:#e8edf2}.c{background:#1a222b!important;border-color:#334050!important}}
+.c{max-width:560px;margin:24px auto;background:#fff;border:1px solid #c9d0d9;border-radius:12px;padding:18px}
+h1{font:600 1.2rem Georgia,serif;margin:0 0 10px}
+button,a.b{display:inline-block;font:inherit;padding:10px 16px;border-radius:10px;border:1px solid #1f3a5f;background:#1f3a5f;color:#fff;text-decoration:none;margin:8px 8px 0 0}
+a.b{background:transparent;color:inherit;border-color:#8893a0}
+small{opacity:.7;display:block;margin-top:12px}
+</style></head><body>
+<div class="c"><h1>Questionari A4 · ricezione</h1>
+<p id="m">Lettura del questionario dal link…</p>
+<div id="act" hidden><button id="ok">Importa e apri l’app</button><a class="b" href="index.html">Annulla</a></div>
+<small>Versione 8. Il questionario resta su questo dispositivo: nessun dato viene inviato a server.</small></div>
+<script>
+const $=id=>document.getElementById(id),T={mc:1,open:1,fill:1,complete:1,column:1,translate:1};
+const ubu=t=>Uint8Array.from(atob(t.replace(/-/g,"+").replace(/_/g,"/")+"=".repeat((4-t.length%4)%4)),c=>c.charCodeAt(0));
+async function unzip(t){const r=ubu(t.slice(1));if(t[0]=="0")return new TextDecoder().decode(r);return new Response(new Blob([r]).stream().pipeThrough(new DecompressionStream("deflate-raw"))).text()}
+function valid(o){if(!o||o.v!==1||!Array.isArray(o.q)||o.q.length>300)return null;
+const q=o.q.filter(x=>x&&T[x.t]&&typeof x.q=="string").map(x=>({t:x.t,q:x.q,o:typeof x.o=="string"?x.o:""}));let s=null;
+if(o.s&&o.s.on){const n=Math.min(100,Math.max(1,parseInt(o.s.n)||1)),k=Math.min(5,Math.max(2,parseInt(o.s.k)||5));s={on:true,n,k,key:(Array.isArray(o.s.key)?o.s.key:[]).slice(0,n).map(v=>Number.isInteger(v)&&v>=0&&v<k?v:null)}}
+return{title:String(o.t||"").slice(0,200),meta:String(o.m||"").slice(0,200),qs:q,std:s,id:/^\d{6}$/.test(String(o.i))?String(o.i):String(Math.floor(100000+Math.random()*900000))}}
+(async()=>{const h=location.hash.match(/#q=([A-Za-z0-9_-]+)/);
+if(!h){$("m").textContent="Nessun questionario nel link. Usa il QR o il link creato dall’app, nella scheda Condividi.";return}
+try{const v=valid(JSON.parse(await unzip(h[1])));if(!v)throw 0;
+$("m").textContent="«"+v.title+"» · "+v.qs.length+" domande"+(v.std?" · foglio standard da "+v.std.n:"")+". Importarlo sostituisce il questionario e i risultati salvati su questo dispositivo; classi e nomi restano.";$("act").hidden=false;
+$("ok").onclick=()=>{try{let st={};try{const r=localStorage.getItem("quest");if(r)st=JSON.parse(r)}catch(e){}
+if(st&&st.enc){localStorage.setItem("quest_in",h[1])}
+else{st=st||{};st.title=v.title;st.meta=v.meta;st.qs=v.qs;st.std=v.std||{on:false,n:20,k:5,key:[]};st.id=v.id;st.res=[];localStorage.setItem("quest",JSON.stringify(st))}
+location.replace("index.html?v=8")}catch(e){$("m").textContent="Impossibile salvare su questo dispositivo (navigazione privata?). Apri il link in una scheda normale di Safari."}}}
+catch(e){$("m").textContent="Non riesco a leggere il questionario dal link. Se è incompleto, usa Scarica file e Importa da file nell’app."}})();
+</script></body></html>
