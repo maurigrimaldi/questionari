@@ -5,11 +5,13 @@
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' blob: data:; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'; connect-src 'self'; media-src 'self' blob:; worker-src 'self'; manifest-src 'self'; form-action 'none'; base-uri 'none'">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="theme-color" content="#1f3a5f">
 <meta name="apple-mobile-web-app-title" content="Questionari">
 <link rel="manifest" href="manifest.webmanifest">
-<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
-<link rel="icon" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" type="image/png" href="icon-192.png">
 <title>Questionari A4</title>
 <style>
 :root{--bg:#eef0f3;--fg:#17212b;--card:#fff;--ac:#1f3a5f;--acf:#fff;--bd:#c9d0d9;color-scheme:light dark}
@@ -58,7 +60,7 @@ table.col td:first-child{width:38%;font-weight:bold}
 @media print{body{background:#fff}header,.ui{display:none!important}main{padding:0;max-width:none}.page{margin:0;box-shadow:none;page-break-after:always}.wrap{overflow:visible}}
 [hidden]{display:none!important}
 .lk{position:fixed;inset:0;background:var(--bg);z-index:99;display:flex;align-items:center;justify-content:center;padding:20px}
-.cols.c3{columns:3;column-gap:6mm}.cols.dn .it{margin-bottom:1.4mm;gap:1.4mm}.cols.dn .bb{width:5mm;height:5mm}.cols.dn .it b{width:9mm}
+.cols.c3{columns:3;column-gap:6mm}.cols.c4{columns:4;column-gap:4mm}.cols.c4 .it b{width:7mm}.cols.dn .it{margin-bottom:1.4mm;gap:1.4mm}.cols.dn .bb{width:5mm;height:5mm}.cols.dn .it b{width:9mm}
 .key button{padding:3px 9px;margin:1px}
 video{max-height:50vh;object-fit:contain;background:#000}
 </style>
@@ -73,7 +75,7 @@ video{max-height:50vh;object-fit:contain;background:#000}
 <section class="view ui" id="v-crea">
 <div class="card"><b>Tipo di foglio</b>
 <label><input type="checkbox" id="stdon" style="width:auto"> Foglio standard con sole risposte (stile ZipGrade): scegli numero di domande e chiave a tocco nella scheda Chiave</label>
-<div class="row"><label>Domande<select id="stdn"></select></label><label>Scelte per domanda<select id="stdk"></select></label></div></div>
+<div class="row"><label>Numero di domande (da 1 a 100)<input id="stdn" type="number" min="1" max="100" step="1" inputmode="numeric"></label><label>Scelte per domanda<select id="stdk"></select></label></div></div>
 <div class="card">
 <label>Titolo del questionario<input id="title"></label>
 <div class="row"><label>Materia / classe<input id="meta"></label></div>
@@ -164,7 +166,7 @@ function rend(){LC=null;
 $("p-dom").innerHTML='<div class="page"><h2>'+esc(S.title)+'</h2><div style="margin-bottom:6mm">'+esc(S.meta)+'  ·  Codice compito '+S.id+'</div>'+S.qs.map(qHTML).join("")+"</div>";
 const it=items();
 let id='<div class="idg">'+[0,1,2,3].map(c=>"<div>"+[0,1,2,3,4,5,6,7,8,9].map(d=>'<span class="bb" data-c="'+c+'" data-d="'+d+'">'+d+"</span>").join("")+"</div>").join("")+"</div>";
-$("p-ris").innerHTML='<div class="page"><i class="mk tl"></i><i class="mk tr"></i><i class="mk bl"></i><i class="mk br"></i><h2>Foglio risposte</h2><div>Compito '+S.id+'. Annerisci le caselle con penna nera. Le risposte aperte si scrivono sul foglio domande.</div><div style="margin-top:4mm"><b>Codice studente (4 cifre, fornito dal docente)</b></div>'+id+'<div class="cols'+(it.length>40?" c3":"")+(it.length>20?" dn":"")+'">'+it.map(x=>'<div class="it"><b>'+x.l+"</b>"+Array.from({length:x.k},(_,k)=>'<span class="bb" data-l="'+x.l+'" data-k="'+k+'">'+L[k]+"</span>").join("")+"</div>").join("")+"</div></div>";
+$("p-ris").innerHTML='<div class="page"><i class="mk tl"></i><i class="mk tr"></i><i class="mk bl"></i><i class="mk br"></i><h2>Foglio risposte</h2><div>Compito '+S.id+'. Annerisci le caselle con penna nera. Le risposte aperte si scrivono sul foglio domande.</div><div style="margin-top:4mm"><b>Codice studente (4 cifre, fornito dal docente)</b></div>'+id+'<div class="cols'+(it.length>60?" c4":it.length>40?" c3":"")+(it.length>20?" dn":"")+'">'+it.map(x=>'<div class="it"><b>'+x.l+"</b>"+Array.from({length:x.k},(_,k)=>'<span class="bb" data-l="'+x.l+'" data-k="'+k+'">'+L[k]+"</span>").join("")+"</div>").join("")+"</div></div>";
 keyV();
 }
 function list(){$("list").innerHTML=S.qs.map((q,i)=>'<div class="card" data-i="'+i+'"><div class="row"><select data-f="t">'+Object.keys(T).map(k=>'<option value="'+k+'"'+(k==q.t?" selected":"")+">"+T[k]+"</option>").join("")+'</select><button data-del="'+i+'">Elimina</button></div><label>Domanda '+(i+1)+'<textarea data-f="q">'+esc(q.q)+"</textarea></label>"+(HINT[q.t]?'<label>'+HINT[q.t]+'<textarea data-f="o">'+esc(q.o||"")+"</textarea></label>":"")+(q.t=="fill"||q.t=="complete"?'<small class="h">Spazi: {risposta} oppure {*giusta|errata}</small>':"")+"</div>").join("")}
@@ -198,8 +200,9 @@ function keyV(){const it=items(),sd=S.std&&S.std.on;let h="<b>Chiave di correzio
 it.forEach((x,i)=>{h+="<tr><td>"+x.l+"</td><td>"+(sd?Array.from({length:x.k},(_,k)=>'<button data-ki="'+i+'" data-kk="'+k+'" class="'+(x.c===k?"on":"")+'">'+L[k]+"</button>").join(" "):(x.c>=0?L[x.c]:"non indicata"))+"</td></tr>"});$("p-key").innerHTML=h+"</table>"}
 $("p-key").onclick=e=>{const i=e.target.dataset.ki;if(i==null)return;S.std.key=S.std.key||[];S.std.key[i]=+e.target.dataset.kk;save();rend()};
 function stdUI(){const t=S.std||{on:false,n:20,k:5};$("stdon").checked=t.on;$("stdn").value=t.n;$("stdk").value=t.k}
-$("stdn").innerHTML=[10,20,30,40,50,60].map(n=>"<option>"+n+"</option>").join("");$("stdk").innerHTML=[2,3,4,5].map(n=>"<option>"+n+"</option>").join("");
-["stdon","stdn","stdk"].forEach(i=>$(i).onchange=()=>{S.std={on:$("stdon").checked,n:+$("stdn").value,k:+$("stdk").value,key:(S.std&&S.std.key)||[]};save();rend()});
+$("stdk").innerHTML=[2,3,4,5].map(n=>"<option>"+n+"</option>").join("");
+const nn=()=>Math.min(100,Math.max(1,parseInt($("stdn").value)||1)),stdSet=()=>{S.std={on:$("stdon").checked,n:nn(),k:+$("stdk").value,key:(S.std&&S.std.key)||[]};save();rend()};
+["stdon","stdk"].forEach(i=>$(i).onchange=stdSet);$("stdn").oninput=stdSet;$("stdn").onchange=()=>{$("stdn").value=nn();stdSet()};
 function solveH(s,t){const A=[];for(let i=0;i<4;i++){const[x,y]=s[i],[u,v]=t[i];A.push([x,y,1,0,0,0,-u*x,-u*y,u]);A.push([0,0,0,x,y,1,-v*x,-v*y,v])}
 for(let i=0;i<8;i++){let p=i;for(let r=i+1;r<8;r++)if(Math.abs(A[r][i])>Math.abs(A[p][i]))p=r;[A[i],A[p]]=[A[p],A[i]];for(let r=0;r<8;r++){if(r==i)continue;const f=A[r][i]/A[i][i];for(let c=i;c<9;c++)A[r][c]-=f*A[i][c]}}
 return A.map((r,i)=>r[8]/r[i])}
